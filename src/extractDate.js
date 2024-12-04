@@ -129,7 +129,7 @@ export default (input: string, userConfiguration: UserConfigurationType = defaul
 
           matches.push({
             date: formatDate(date, 'yyyy-MM-dd'),
-            originalText: date,
+            originalText: subject,
           });
         }
       } else {
