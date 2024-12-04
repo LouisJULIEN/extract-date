@@ -300,13 +300,7 @@ export default () => {
     {
       dateFnsFormat: 'R',
       test: false,
-    },
-    {
-      dateFnsFormat: 'EEEE',
-    },
-    {
-      dateFnsFormat: 'EEE',
-    },
+    }
   ];
 
   return [
