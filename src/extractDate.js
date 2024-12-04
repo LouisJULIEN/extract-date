@@ -108,6 +108,7 @@ export default (input: string, userConfiguration: UserConfigurationType = defaul
 
             matches.push({
               date: maybeDate,
+              originalText: subject,
             });
           }
         }
@@ -128,6 +129,7 @@ export default (input: string, userConfiguration: UserConfigurationType = defaul
 
           matches.push({
             date: formatDate(date, 'yyyy-MM-dd'),
+            originalText: date,
           });
         }
       } else {
@@ -170,6 +172,7 @@ export default (input: string, userConfiguration: UserConfigurationType = defaul
 
           matches.push({
             date: formatDate(date, 'yyyy-MM-dd'),
+            originalText: subject,
           });
         } else {
           const date = parseDate(
@@ -232,6 +235,7 @@ export default (input: string, userConfiguration: UserConfigurationType = defaul
 
           matches.push({
             date: formatDate(maybeDate, 'yyyy-MM-dd'),
+            originalText: subject,
           });
         }
       }
