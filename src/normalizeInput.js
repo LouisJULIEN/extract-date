@@ -15,8 +15,8 @@ export default (input: string): string => {
       .replace(/,/g, ' ')
 
       .replace(/[.:;] /g, ' ')
-      .replace(/\s+/g, ' ')
-      .trim();
+      .trim()
+      .replace(/[.!#]+$/g, '');
 
     if (result === lastInput) {
       return result;
