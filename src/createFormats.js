@@ -126,12 +126,17 @@ export default () => {
   ];
 
   const localised = [
-    {
-      dateFnsFormat: 'MMMM d yyyy',
-    },
-    {
-      dateFnsFormat: 'MMMM do yyyy',
-    },
+    ...cartesian([
+      ['MMMM'],
+      ['d', 'do'],
+      [',', ''],
+      ['yyyy'],
+    ])
+      .map((combination) => {
+        return {
+          dateFnsFormat: combination.join(' ').replace(' ,', ',').replace(/ +/, ' '),
+        };
+      }),
     ...cartesian([
       [
         'do',
@@ -147,7 +152,7 @@ export default () => {
     ])
       .map((combination) => {
         return {
-          dateFnsFormat: combination.join(' '),
+          dateFnsFormat: combination.join(' ').replace(' ,', ',').replace(/ +/, ' '),
         };
       }),
     ...cartesian([
@@ -165,7 +170,7 @@ export default () => {
     ])
       .map((combination) => {
         return {
-          dateFnsFormat: combination.join(' '),
+          dateFnsFormat: combination.join(' ').replace(' ,', ',').replace(/ +/, ' '),
         };
       }),
     {
@@ -183,6 +188,10 @@ export default () => {
         'EEE',
       ],
       [
+        '',
+        ',',
+      ],
+      [
         'MMMM',
         'MMM',
       ],
@@ -194,7 +203,7 @@ export default () => {
     ])
       .map((combination) => {
         return {
-          dateFnsFormat: combination.join(' '),
+          dateFnsFormat: combination.join(' ').replace(' ,', ',').replace(/ +/, ' '),
         };
       }),
     ...cartesian([
@@ -203,6 +212,10 @@ export default () => {
         'EEE',
       ],
       [
+        '',
+        ',',
+      ],
+      [
         'dd',
         'do',
         'd',
@@ -214,7 +227,7 @@ export default () => {
     ])
       .map((combination) => {
         return {
-          dateFnsFormat: combination.join(' '),
+          dateFnsFormat: combination.join(' ').replace(' ,', ',').replace(/ +/, ' '),
         };
       }),
     ...cartesian([
