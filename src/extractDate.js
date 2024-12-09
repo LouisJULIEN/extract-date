@@ -14,16 +14,11 @@ import createMovingChunks from './createMovingChunks';
 import extractRelativeDate from './extractRelativeDate';
 import createFormats from './createFormats';
 import normalizeInput from './normalizeInput';
-import Logger from './Logger';
 import type {
   ConfigurationType,
   DateMatchType,
   UserConfigurationType,
 } from './types';
-
-const log = Logger.child({
-  namespace: 'extractDate',
-});
 
 const defaultConfiguration = {
   maximumAge: Infinity,
@@ -38,11 +33,7 @@ const dateFnsLocaleMap = {
 
 // eslint-disable-next-line complexity
 export default (input: string, userConfiguration: UserConfigurationType = defaultConfiguration): $ReadOnlyArray<DateMatchType> => {
-  log.debug('attempting to extract date from "%s" input', input);
-
   const normalizedInput = normalizeInput(input);
-
-  log.debug('normalized input to "%s"', normalizedInput);
 
   const configuration: ConfigurationType = {
     ...defaultConfiguration,
@@ -73,10 +64,6 @@ export default (input: string, userConfiguration: UserConfigurationType = defaul
     throw new Error('`minimumAge` must be a positive number.');
   }
 
-  log.debug({
-    configuration,
-  }, 'attempting to extract date from "%s" input', normalizedInput);
-
   let words = normalizedInput.split(' ');
 
   const matches = [];
@@ -95,16 +82,12 @@ export default (input: string, userConfiguration: UserConfigurationType = defaul
 
       if (format.dateFnsFormat === 'R') {
         if (!configuration.locale) {
-          log.trace('cannot attempt format without `locale` configuration');
         } else if (!configuration.timezone) {
-          log.trace('cannot attempt format without `timezone` configuration');
         } else {
           const maybeDate = extractRelativeDate(subject, configuration.locale, configuration.timezone);
 
           if (maybeDate) {
             words = words.slice(wordOffset);
-
-            log.debug('matched "%s" input using "%s" format (%s direction)', subject, format.dateFnsFormat, format.direction || 'no');
 
             matches.push({
               date: maybeDate,
@@ -124,8 +107,6 @@ export default (input: string, userConfiguration: UserConfigurationType = defaul
 
         if (isValidDate(date)) {
           words = words.slice(wordOffset);
-
-          log.debug('matched "%s" input using "%s" format (%s direction)', subject, format.dateFnsFormat, format.direction || 'no');
 
           matches.push({
             date: formatDate(date, 'yyyy-MM-dd'),
@@ -153,22 +134,15 @@ export default (input: string, userConfiguration: UserConfigurationType = defaul
           const configurationDirection = configuration.direction;
 
           if (formatDirection && configurationDirection && format.dateFnsFormat.includes('yyyy') && formatDirection.replace('Y', '') === configurationDirection.replace('Y', '')) {
-            log.debug('matched format using yyyy; month-day direction matches');
           } else if (format.direction && format.direction !== configuration.direction) {
-            log.trace('discarding match; direction mismatch');
-
             continue;
           }
 
           if (format.direction && !configuration.direction) {
-            log.info('found a match using "%s" format; unsafe to use without `direction` configuration', format.dateFnsFormat);
-
             continue;
           }
 
           words = words.slice(wordOffset);
-
-          log.debug('matched "%s" input using "%s" format (%s direction)', subject, format.dateFnsFormat, format.direction || 'no');
 
           matches.push({
             date: formatDate(date, 'yyyy-MM-dd'),
@@ -218,20 +192,14 @@ export default (input: string, userConfiguration: UserConfigurationType = defaul
           }
 
           if (format.direction && format.direction !== configuration.direction) {
-            log.trace('discarding match; direction mismatch');
-
             continue;
           }
 
           if (format.direction && !configuration.direction) {
-            log.info('found a match using "%s" format; unsafe to use without "format" configuration', format.dateFnsFormat);
-
             continue;
           }
 
           words = words.slice(wordOffset);
-
-          log.debug('matched "%s" input using "%s" format (%s direction)', subject, format.dateFnsFormat, format.direction || 'no');
 
           matches.push({
             date: formatDate(maybeDate, 'yyyy-MM-dd'),

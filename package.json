@@ -22,8 +22,7 @@
     "date-fns": "^2.9.0",
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.27",
-    "relative-date-names": "^1.0.4",
-    "roarr": "^2.15.2"
+    "relative-date-names": "^1.0.4"
   },
   "description": "Extracts date from an arbitrary text input.",
   "devDependencies": {
@@ -86,7 +85,8 @@
     "build": "rm -fr ./dist && NODE_ENV=production babel ./src --out-dir ./dist --copy-files --source-maps && flow-copy-source src dist",
     "create-readme": "gitdown ./.README/README.md --output-file ./README.md",
     "lint": "eslint ./src ./test && flow",
-    "test": "NODE_ENV=test ava --verbose --serial"
+    "test": "NODE_ENV=test ava --verbose --serial",
+    "bundle": "esbuild dist/index.js --bundle  --platform=node --outfile=bundle/extract-date.js --format=esm"
   },
   "version": "3.0.0-local"
 }
