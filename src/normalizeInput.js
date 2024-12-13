@@ -13,7 +13,7 @@ export default (input: string): string => {
 
       .replace(/[.:;] /g, ' ')
       .trim()
-      .replace(/[.!#]+$/g, '');
+      .replace(/[.!#?]+$/g, '');
 
     if (result === lastInput) {
       return result;
