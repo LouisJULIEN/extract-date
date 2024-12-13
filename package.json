@@ -87,7 +87,7 @@
     "create-readme": "gitdown ./.README/README.md --output-file ./README.md",
     "lint": "eslint ./src ./test && flow",
     "test": "NODE_ENV=test ava --verbose --serial",
-    "bundle": "esbuild dist/index.js --bundle  --platform=node --outfile=bundle/extract-date.js --format=esm"
+    "bundle": "esbuild dist/index.js --bundle --outfile=bundle/extract-date.js --format=esm"
   },
   "version": "3.0.0-local"
 }
