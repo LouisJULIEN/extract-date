@@ -3,6 +3,8 @@
 import cartesian from 'cartesian';
 import calculateSpecificity from './calculateSpecificity';
 
+const formatCombinaison = (combination) => combination.join(' ').replace(' ,', ',').replace(/ +/, ' ').replace(/ $/, '')
+
 export default () => {
   // The reason `yearFirstDashSeparator` and `yearFirstSlashSeparator` formats do not have direction is because
   // there are no known regions that use yyyy-dd-MM format.
@@ -131,10 +133,11 @@ export default () => {
       ['d', 'do'],
       [',', ''],
       ['yyyy'],
+      [',', ''],
     ])
       .map((combination) => {
         return {
-          dateFnsFormat: combination.join(' ').replace(' ,', ',').replace(/ +/, ' '),
+          dateFnsFormat: formatCombinaison(combination),
         };
       }),
     ...cartesian([
@@ -152,7 +155,7 @@ export default () => {
     ])
       .map((combination) => {
         return {
-          dateFnsFormat: combination.join(' ').replace(' ,', ',').replace(/ +/, ' '),
+          dateFnsFormat: formatCombinaison(combination),
         };
       }),
     ...cartesian([
@@ -170,7 +173,7 @@ export default () => {
     ])
       .map((combination) => {
         return {
-          dateFnsFormat: combination.join(' ').replace(' ,', ',').replace(/ +/, ' '),
+          dateFnsFormat: formatCombinaison(combination),
         };
       }),
     {
@@ -203,7 +206,7 @@ export default () => {
     ])
       .map((combination) => {
         return {
-          dateFnsFormat: combination.join(' ').replace(' ,', ',').replace(/ +/, ' '),
+          dateFnsFormat: formatCombinaison(combination),
         };
       }),
     ...cartesian([
@@ -227,7 +230,7 @@ export default () => {
     ])
       .map((combination) => {
         return {
-          dateFnsFormat: combination.join(' ').replace(' ,', ',').replace(/ +/, ' '),
+          dateFnsFormat: formatCombinaison(combination),
         };
       }),
     ...cartesian([
@@ -240,10 +243,14 @@ export default () => {
         'do',
         'd',
       ],
+      [
+        ',',
+        '',
+      ],
     ])
       .map((combination) => {
         return {
-          dateFnsFormat: combination.join(' '),
+          dateFnsFormat: formatCombinaison(combination),
         };
       }),
     ...cartesian([
@@ -256,10 +263,14 @@ export default () => {
         'MMMM',
         'MMM',
       ],
+      [
+        ',',
+        '',
+      ],
     ])
       .map((combination) => {
         return {
-          dateFnsFormat: combination.join(' '),
+          dateFnsFormat: formatCombinaison(combination),
         };
       }),
   ];
@@ -279,10 +290,14 @@ export default () => {
         'MM',
         'M',
       ],
+      [
+        ',',
+        '',
+      ],
     ])
       .map((combination) => {
         return {
-          dateFnsFormat: combination.join(''),
+          dateFnsFormat: combination.join('').replace(' ,', ',').replace(/ +/, ' '),
           direction: 'DM',
         };
       }),
@@ -300,10 +315,14 @@ export default () => {
         'dd',
         'd',
       ],
+      [
+        ',',
+        '',
+      ],
     ])
       .map((combination) => {
         return {
-          dateFnsFormat: combination.join(''),
+          dateFnsFormat: combination.join('').replace(' ,', ',').replace(/ +/, ' '),
           direction: 'MD',
         };
       }),
