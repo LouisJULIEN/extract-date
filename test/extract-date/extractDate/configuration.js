@@ -24,7 +24,7 @@ test('throws an error if invalid `locale` is provided', (t) => {
     });
   });
 
-  t.is(error.message, 'No translation available for the target locale (date-fns).');
+  t.is(error.message, 'No translation available for the target locale.');
 });
 
 test('throws an error if invalid `timezone` is provided', (t) => {

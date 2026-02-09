@@ -1,19 +1,21 @@
 // @flow
 
-/* eslint-disable no-continue, no-negated-condition, import/no-namespace */
+/* eslint-disable no-continue, no-negated-condition */
 
 import {
   format as formatDate,
   parse as parseDate,
   isValid as isValidDate,
 } from 'date-fns';
-import * as locales from 'date-fns/locale';
+import {enUS as dateFnsLocale} from 'date-fns/locale';
 import moment from 'moment-timezone';
 import dictionary from 'relative-date-names';
 import createMovingChunks from './createMovingChunks';
 import extractRelativeDate from './extractRelativeDate';
 import createFormats from './createFormats';
 import normalizeInput from './normalizeInput';
+import {replaceMonthName, replaceDayName} from './resolveLocalizedNames';
+import monthsData from './months.json';
 import type {
   ConfigurationType,
   DateMatchType,
@@ -27,8 +29,31 @@ const defaultConfiguration = {
 
 const formats = createFormats();
 
-const dateFnsLocaleMap = {
-  en: 'enUS',
+const translateChunk = (subject: string, locale: string, accentless: boolean): string => {
+  if (locale === 'en') {
+    return subject;
+  }
+
+  return subject.split(' ').map((word) => {
+    // Preserve trailing punctuation (e.g. commas)
+    const punctuationMatch = word.match(/^(.+?)([,]+)$/);
+    const cleanWord = punctuationMatch ? punctuationMatch[1] : word;
+    const punctuation = punctuationMatch ? punctuationMatch[2] : '';
+
+    const monthReplacement = replaceMonthName(cleanWord, locale, accentless);
+
+    if (monthReplacement) {
+      return monthReplacement + punctuation;
+    }
+
+    const dayReplacement = replaceDayName(cleanWord, locale, accentless);
+
+    if (dayReplacement) {
+      return dayReplacement + punctuation;
+    }
+
+    return word;
+  }).join(' ');
 };
 
 // eslint-disable-next-line complexity
@@ -41,16 +66,13 @@ export default (input: string, userConfiguration: UserConfigurationType = defaul
   };
 
   const locale = configuration.locale || 'en';
+  const accentless = configuration.accentless || false;
 
-  const dateFnsLocale = locales[dateFnsLocaleMap[locale] || locale];
-
-  if (!dateFnsLocale) {
-    throw new Error('No translation available for the target locale (date-fns).');
+  if (!monthsData[locale]) {
+    throw new Error('No translation available for the target locale.');
   }
 
-  if (!dictionary[locale]) {
-    throw new Error('No translation available for the target locale (relative dates).');
-  }
+  const hasRelativeDateSupport = Boolean(dictionary[locale]);
 
   if (configuration.timezone && !moment.tz.zone(configuration.timezone)) {
     throw new Error('Unrecognized timezone.');
@@ -83,6 +105,7 @@ export default (input: string, userConfiguration: UserConfigurationType = defaul
       if (format.dateFnsFormat === 'R') {
         if (!configuration.locale) {
         } else if (!configuration.timezone) {
+        } else if (!hasRelativeDateSupport) {
         } else {
           const maybeDate = extractRelativeDate(subject, configuration.locale, configuration.timezone);
 
@@ -96,8 +119,10 @@ export default (input: string, userConfiguration: UserConfigurationType = defaul
           }
         }
       } else if (format.dateFnsFormat === 'EEE' || format.dateFnsFormat === 'EEEE') {
+        const translatedSubject = translateChunk(subject, locale, accentless);
+
         const date = parseDate(
-          subject,
+          translatedSubject,
           format.dateFnsFormat,
           baseDate,
           {
@@ -116,9 +141,11 @@ export default (input: string, userConfiguration: UserConfigurationType = defaul
       } else {
         const yearIsExplicit = typeof format.yearIsExplicit === 'boolean' ? format.yearIsExplicit : true;
 
+        const translatedSubject = format.localised ? translateChunk(subject, locale, accentless) : subject;
+
         if (yearIsExplicit) {
           const date = parseDate(
-            subject,
+            translatedSubject,
             format.dateFnsFormat,
             baseDate,
             {
@@ -150,7 +177,7 @@ export default (input: string, userConfiguration: UserConfigurationType = defaul
           });
         } else {
           const date = parseDate(
-            subject,
+            translatedSubject,
             format.dateFnsFormat,
             baseDate,
             {

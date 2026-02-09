@@ -48,7 +48,7 @@ test('extracts relative date (yesterday)', (t) => {
     timezone: 'Europe/London',
   };
 
-  t.deepEqual(extractDate('yesterday', configuration), [{date: '2000-01-01'}]);
+  t.deepEqual(extractDate('yesterday', configuration), [{date: '2000-01-01', originalText: 'yesterday'}]);
 });
 
 test('extracts relative date (today)', (t) => {
@@ -59,7 +59,7 @@ test('extracts relative date (today)', (t) => {
     timezone: 'Europe/London',
   };
 
-  t.deepEqual(extractDate('today', configuration), [{date: '2000-01-01'}]);
+  t.deepEqual(extractDate('today', configuration), [{date: '2000-01-01', originalText: 'today'}]);
 });
 
 test('extracts relative date (tomorrow)', (t) => {
@@ -70,5 +70,5 @@ test('extracts relative date (tomorrow)', (t) => {
     timezone: 'Europe/London',
   };
 
-  t.deepEqual(extractDate('tomorrow', configuration), [{date: '2000-01-02'}]);
+  t.deepEqual(extractDate('tomorrow', configuration), [{date: '2000-01-02', originalText: 'tomorrow'}]);
 });

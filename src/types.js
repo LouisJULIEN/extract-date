@@ -7,6 +7,7 @@ export type DateMatchType = {|
 export type DirectionType = 'DM' | 'DMY' | 'DYM' | 'MD' | 'YDM' | 'YMD' | 'MDY';
 
 export type UserConfigurationType = {|
+  +accentless?: boolean,
   +direction?: DirectionType,
   +locale?: string,
   +maximumAge?: number,
@@ -15,6 +16,7 @@ export type UserConfigurationType = {|
 |};
 
 export type ConfigurationType = {|
+  +accentless?: boolean,
   +direction?: DirectionType,
   +locale?: string,
   +maximumAge: number,

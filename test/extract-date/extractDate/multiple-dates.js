@@ -29,9 +29,11 @@ test('extracts multiple dates', (t) => {
   const expected = [
     {
       date: formatDate(new Date(), 'yyyy-MM-dd'),
+      originalText: formatDate(new Date(), 'yyyy-MM-dd'),
     },
     {
       date: formatDate(addDays(new Date(), 1), 'yyyy-MM-dd'),
+      originalText: formatDate(addDays(new Date(), 1), 'yyyy-MM-dd'),
     },
   ];
 
