@@ -29,7 +29,7 @@ const defaultConfiguration = {
 
 const formats = createFormats();
 
-const translateChunk = (subject: string, locale: string, accentless: boolean): string => {
+const translateChunk = (subject: string, locale: string, translateAccentless: boolean): string => {
   if (locale === 'en') {
     return subject;
   }
@@ -40,13 +40,13 @@ const translateChunk = (subject: string, locale: string, accentless: boolean): s
     const cleanWord = punctuationMatch ? punctuationMatch[1] : word;
     const punctuation = punctuationMatch ? punctuationMatch[2] : '';
 
-    const monthReplacement = replaceMonthName(cleanWord, locale, accentless);
+    const monthReplacement = replaceMonthName(cleanWord, locale, translateAccentless);
 
     if (monthReplacement) {
       return monthReplacement + punctuation;
     }
 
-    const dayReplacement = replaceDayName(cleanWord, locale, accentless);
+    const dayReplacement = replaceDayName(cleanWord, locale, translateAccentless);
 
     if (dayReplacement) {
       return dayReplacement + punctuation;
@@ -66,7 +66,7 @@ export default (input: string, userConfiguration: UserConfigurationType = defaul
   };
 
   const locale = configuration.locale || 'en';
-  const accentless = configuration.accentless || false;
+  const translateAccentless = configuration.translateAccentless || true;
 
   if (!monthsData[locale]) {
     throw new Error('No translation available for the target locale.');
@@ -119,7 +119,7 @@ export default (input: string, userConfiguration: UserConfigurationType = defaul
           }
         }
       } else if (format.dateFnsFormat === 'EEE' || format.dateFnsFormat === 'EEEE') {
-        const translatedSubject = translateChunk(subject, locale, accentless);
+        const translatedSubject = translateChunk(subject, locale, translateAccentless);
 
         const date = parseDate(
           translatedSubject,
@@ -141,7 +141,7 @@ export default (input: string, userConfiguration: UserConfigurationType = defaul
       } else {
         const yearIsExplicit = typeof format.yearIsExplicit === 'boolean' ? format.yearIsExplicit : true;
 
-        const translatedSubject = format.localised ? translateChunk(subject, locale, accentless) : subject;
+        const translatedSubject = format.localised ? translateChunk(subject, locale, translateAccentless) : subject;
 
         if (yearIsExplicit) {
           const date = parseDate(

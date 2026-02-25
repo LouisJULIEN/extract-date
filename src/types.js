@@ -16,7 +16,8 @@ export type UserConfigurationType = {|
 |};
 
 export type ConfigurationType = {|
-  +accentless?: boolean,
+  +translateAccentless?: boolean,
+
   +direction?: DirectionType,
   +locale?: string,
   +maximumAge: number,
