@@ -61,16 +61,54 @@ test('extracts a localised date for a non-date-fns locale (Afrikaans)', (t) => {
   t.deepEqual(extractDate('Januarie 1, 2017', configuration), [{date: '2017-01-01', originalText: 'Januarie 1, 2017'}]);
 });
 
+test('Translation works', (t) => {
+  clock.tick(parseDate('2018-01-01', 'yyyy-MM-dd', new Date()).getTime());
+
+  t.deepEqual(extractDate('Va bene domani', {
+    translateAccentless: true,
+    locale: 'it',
+  }), [{date: '2018-01-02', originalText: 'domani'}]);
+
+  t.deepEqual(extractDate('Va bene domani', {
+    translateAccentless: true,
+    locale: 'fr',
+  }), []);
+
+  t.deepEqual(extractDate('Va bene domani', {
+    translateAccentless: true,
+    locale: 'en',
+  }), []);
+})
+
+
 // Italian day names carry a grave accent (lunedì, martedì, venerdì…).
 // accentless:true lets callers omit the accent and still get a match.
-// 2018-01-01 is a Monday, so "lunedi 1 gennaio" unambiguously maps to that date.
+// 2018-02-05 is a Monday, so "lunedi 5 febbraio" unambiguously maps to that date.
 test('extracts Italian date with accentless day name', (t) => {
   clock.tick(parseDate('2018-01-01', 'yyyy-MM-dd', new Date()).getTime());
 
-  const configuration = {
-    accentless: true,
+  t.deepEqual(extractDate('lunedi 5 febbraio', {
+    translateAccentless: true,
     locale: 'it',
-  };
+  }), [{date: '2018-02-05', originalText: 'lunedi 5 febbraio'}]);
 
-  t.deepEqual(extractDate('lunedi 1 gennaio', configuration), [{date: '2018-01-01', originalText: 'lunedi 1 gennaio'}]);
+  t.deepEqual(extractDate('lunedi 5 febbraio', {
+    translateAccentless: false,
+    locale: 'it',
+  }), []);
+
+
+  t.deepEqual(extractDate('lunedì 5 febbraio', {
+    translateAccentless: true,
+    locale: 'it',
+  }), [{date: '2018-02-05', originalText: 'lunedi 5 febbraio'}]);
+
+
+  t.deepEqual(extractDate('lunedì 5 febbraio', {
+    translateAccentless: false,
+    locale: 'it',
+  }), [{date: '2018-02-05', originalText: 'lunedi 5 febbraio'}]);
+
 });
+
+
