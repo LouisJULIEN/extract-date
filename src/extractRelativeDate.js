@@ -10,7 +10,7 @@ export default (subject: string, locale: string, timezone: string): ?string => {
     throw new Error('No translation available for the target locale.');
   }
 
-  if (!moment.tz.zone(timezone)) {
+  if (timezone && !moment.tz.zone(timezone)) {
     throw new Error('Unrecognized timezone.');
   }
 

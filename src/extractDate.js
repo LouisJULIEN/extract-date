@@ -27,6 +27,8 @@ const defaultConfiguration = {
   minimumAge: Infinity,
 };
 
+const stripDiacritics = (text) => text.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
 const formats = createFormats();
 
 const translateChunk = (subject: string, locale: string, translateAccentless: boolean): string => {
@@ -66,7 +68,7 @@ export default (input: string, userConfiguration: UserConfigurationType = defaul
   };
 
   const locale = configuration.locale || 'en';
-  const translateAccentless = configuration.translateAccentless || true;
+  const translateAccentless = Boolean(configuration.translateAccentless);
 
   if (!monthsData[locale]) {
     throw new Error('No translation available for the target locale.');
@@ -104,7 +106,6 @@ export default (input: string, userConfiguration: UserConfigurationType = defaul
 
       if (format.dateFnsFormat === 'R') {
         if (!configuration.locale) {
-        } else if (!configuration.timezone) {
         } else if (!hasRelativeDateSupport) {
         } else {
           const maybeDate = extractRelativeDate(subject, configuration.locale, configuration.timezone);
@@ -114,7 +115,7 @@ export default (input: string, userConfiguration: UserConfigurationType = defaul
 
             matches.push({
               date: maybeDate,
-              originalText: subject,
+              originalText: stripDiacritics(subject),
             });
           }
         }
@@ -135,7 +136,7 @@ export default (input: string, userConfiguration: UserConfigurationType = defaul
 
           matches.push({
             date: formatDate(date, 'yyyy-MM-dd'),
-            originalText: subject,
+            originalText: stripDiacritics(subject),
           });
         }
       } else {
@@ -173,7 +174,7 @@ export default (input: string, userConfiguration: UserConfigurationType = defaul
 
           matches.push({
             date: formatDate(date, 'yyyy-MM-dd'),
-            originalText: subject,
+            originalText: stripDiacritics(subject),
           });
         } else {
           const date = parseDate(
@@ -230,7 +231,7 @@ export default (input: string, userConfiguration: UserConfigurationType = defaul
 
           matches.push({
             date: formatDate(maybeDate, 'yyyy-MM-dd'),
-            originalText: subject,
+            originalText: stripDiacritics(subject),
           });
         }
       }

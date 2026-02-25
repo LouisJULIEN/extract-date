@@ -30,14 +30,14 @@ test('does not extract relative dates when locale is undefined', (t) => {
   t.deepEqual(extractDate('today', configuration), []);
 });
 
-test('does not extract relative dates when timezone is undefined', (t) => {
+test('extracts relative dates when timezone is undefined (uses local time)', (t) => {
   clock.tick(parseDate('2000-01-01', 'yyyy-MM-dd', new Date()).getTime());
 
   const configuration = {
     locale: 'en',
   };
 
-  t.deepEqual(extractDate('today', configuration), []);
+  t.deepEqual(extractDate('today', configuration), [{date: '2000-01-01', originalText: 'today'}]);
 });
 
 test('extracts relative date (yesterday)', (t) => {

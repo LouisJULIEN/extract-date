@@ -44,7 +44,7 @@ test('extracts a localised date with accentless mode (French)', (t) => {
   clock.tick(parseDate('2000-01-01', 'yyyy-MM-dd', new Date()).getTime());
 
   const configuration = {
-    accentless: true,
+    translateAccentless: true,
     locale: 'fr',
   };
 
@@ -95,7 +95,7 @@ test('extracts Italian date with accentless day name', (t) => {
   t.deepEqual(extractDate('lunedi 5 febbraio', {
     translateAccentless: false,
     locale: 'it',
-  }), []);
+  }), [{date: '2018-02-05', originalText: '5 febbraio'}]);
 
 
   t.deepEqual(extractDate('lunedì 5 febbraio', {
