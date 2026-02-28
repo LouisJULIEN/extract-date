@@ -1,10 +1,8 @@
-// @flow
-
-import test from 'ava';
+import { it, expect } from 'vitest';
 import createMovingChunks from '../../src/createMovingChunks';
 
-test('creates an array of fixed length text slices, each offset by 1 character', (t) => {
-  t.deepEqual(createMovingChunks(['a', 'b', 'c', 'd'], 2), [
+it('creates an array of fixed length text slices, each offset by 1 character', () => {
+  expect(createMovingChunks(['a', 'b', 'c', 'd'], 2)).toEqual([
     [
       'a',
       'b',
@@ -19,7 +17,7 @@ test('creates an array of fixed length text slices, each offset by 1 character',
     ],
   ]);
 
-  t.deepEqual(createMovingChunks(['a', 'b', 'c'], 2), [
+  expect(createMovingChunks(['a', 'b', 'c'], 2)).toEqual([
     [
       'a',
       'b',

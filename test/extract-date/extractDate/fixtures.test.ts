@@ -1,22 +1,16 @@
-// @flow
-
-import test, {
-  afterEach,
-  beforeEach,
-} from 'ava';
-import sinon from 'sinon';
+import { it, expect, beforeEach, afterEach, vi } from 'vitest';
 import {
   parse as parseDate,
 } from 'date-fns';
 import fixtureDates from '../../fixtures/dates.json';
 import extractDate from '../../../src/extractDate';
 
-beforeEach((t) => {
-  t.context.clock = sinon.useFakeTimers();
+beforeEach(() => {
+  vi.useFakeTimers();
 });
 
-afterEach((t) => {
-  t.context.clock.restore();
+afterEach(() => {
+  vi.useRealTimers();
 });
 
 const normalizedFixtureDates = fixtureDates
@@ -47,9 +41,9 @@ const normalizedFixtureDates = fixtureDates
   });
 
 for (const fixtureDate of normalizedFixtureDates) {
-  test('extracts dates from "' + fixtureDate.subject + '" fixture using ' + JSON.stringify(fixtureDate.configuration) + ' configuration on ' + fixtureDate.date + ' date', (t) => {
-    t.context.clock.tick(parseDate(fixtureDate.date, 'yyyy-MM-dd', new Date()).getTime());
+  it('extracts dates from "' + fixtureDate.subject + '" fixture using ' + JSON.stringify(fixtureDate.configuration) + ' configuration on ' + fixtureDate.date + ' date', () => {
+    vi.setSystemTime(parseDate(fixtureDate.date, 'yyyy-MM-dd', new Date()).getTime());
 
-    t.deepEqual(extractDate(fixtureDate.subject, fixtureDate.configuration), fixtureDate.matches);
+    expect(extractDate(fixtureDate.subject, fixtureDate.configuration)).toEqual(fixtureDate.matches);
   });
 }

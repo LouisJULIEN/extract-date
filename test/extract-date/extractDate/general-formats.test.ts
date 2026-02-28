@@ -1,26 +1,10 @@
-// @flow
-
-import test, {
-  afterEach,
-  beforeEach,
-} from 'ava';
-import sinon from 'sinon';
+import { it, expect, beforeEach, afterEach, vi } from 'vitest';
 import {
   format as formatDate,
   parse as parseDate,
 } from 'date-fns';
 import extractDate from '../../../src/extractDate';
 import createFormats from '../../../src/createFormats';
-
-let clock;
-
-beforeEach(() => {
-  clock = sinon.useFakeTimers();
-});
-
-afterEach(() => {
-  clock.restore();
-});
 
 // https://en.wikipedia.org/wiki/Date_format_by_country
 // %w arbitrary white-space separated text
@@ -37,14 +21,14 @@ const describeConfiguration = (userConfiguration) => {
 
 const formats = createFormats();
 
+vi.useFakeTimers();
+vi.setSystemTime(parseDate('2000-06-01', 'yyyy-MM-dd', new Date()).getTime());
+
 const subjects = formats
   .filter((format) => {
     return format.test !== false;
   })
   .map((format) => {
-    clock = sinon.useFakeTimers();
-    clock.tick(parseDate('2000-06-01', 'yyyy-MM-dd', new Date()).getTime());
-
     const currentDate = new Date();
 
     return {
@@ -55,15 +39,24 @@ const subjects = formats
     };
   });
 
+vi.useRealTimers();
+
+beforeEach(() => {
+  vi.useFakeTimers();
+});
+
+afterEach(() => {
+  vi.useRealTimers();
+});
+
 for (const subject of subjects) {
-  // eslint-disable-next-line no-loop-func
-  test('extracts ' + subject.dateFnsFormat + ' from "' + subject.input + '" input using ' + describeConfiguration(subject) + ' configuration', (t) => {
-    clock.tick(parseDate('2000-06-01', 'yyyy-MM-dd', new Date()).getTime());
+  it('extracts ' + subject.dateFnsFormat + ' from "' + subject.input + '" input using ' + describeConfiguration(subject) + ' configuration', () => {
+    vi.setSystemTime(parseDate('2000-06-01', 'yyyy-MM-dd', new Date()).getTime());
 
     const actual = extractDate(subject.input, subject);
     const expected = subject.date;
 
-    t.is(actual.length, 1);
-    t.is(actual[0].date, expected);
+    expect(actual.length).toBe(1);
+    expect(actual[0].date).toBe(expected);
   });
 }
