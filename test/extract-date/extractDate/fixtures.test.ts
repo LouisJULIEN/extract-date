@@ -2,8 +2,8 @@ import { it, expect, beforeEach, afterEach, vi } from 'vitest';
 import {
   parse as parseDate,
 } from 'date-fns';
-import fixtureDates from '../../fixtures/dates.json';
-import extractDate from '../../../src/extractDate';
+import fixtureDates from '@test/fixtures/dates.json';
+import extractDate from '@/extractDate';
 
 beforeEach(() => {
   vi.useFakeTimers();

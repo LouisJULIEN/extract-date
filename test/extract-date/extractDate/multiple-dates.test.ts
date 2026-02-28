@@ -4,7 +4,7 @@ import {
   format as formatDate,
   parse as parseDate,
 } from 'date-fns';
-import extractDate from '../../../src/extractDate';
+import extractDate from '@/extractDate';
 
 beforeEach(() => {
   vi.useFakeTimers();

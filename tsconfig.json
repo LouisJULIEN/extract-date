@@ -8,7 +8,12 @@
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "outDir": "./dist",
-    "declaration": true
+    "declaration": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@test/*": ["test/*"]
+    }
   },
   "include": ["src/**/*.ts", "test/**/*.ts"]
 }

@@ -1,7 +1,7 @@
 import { it, expect, beforeEach, afterEach, vi } from 'vitest';
 import moment from 'moment';
-import extractDate from '../../../src/extractDate';
-import type { UserConfigurationType } from '../../../src/types';
+import extractDate from '@/extractDate';
+import type { UserConfigurationType } from '@/types';
 
 beforeEach(() => {
   vi.useFakeTimers();

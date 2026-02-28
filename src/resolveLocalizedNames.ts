@@ -1,5 +1,5 @@
-import monthsData from './months.json';
-import daysData from './days.json';
+import monthsData from '@/months.json';
+import daysData from '@/days.json';
 
 type LocaleData = Record<string, string[]>;
 type LocalesData = Record<string, LocaleData>;

@@ -1,5 +1,5 @@
 import cartesian from 'cartesian';
-import calculateSpecificity from './calculateSpecificity';
+import calculateSpecificity from '@/calculateSpecificity';
 
 type FormatEntry = {
   dateFnsFormat: string;

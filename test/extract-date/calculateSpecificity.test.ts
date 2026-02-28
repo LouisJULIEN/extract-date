@@ -1,6 +1,6 @@
 import { it, expect } from 'vitest';
 import cartesian from 'cartesian';
-import calculateSpecificity from '../../src/calculateSpecificity';
+import calculateSpecificity from '@/calculateSpecificity';
 
 it('tokens including yyyy, (MMMM, MM, MM, M), (dd, d, do) have the highest specificity', () => {
   const formats = cartesian([

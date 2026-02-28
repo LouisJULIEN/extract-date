@@ -1,6 +1,6 @@
 import { it, expect, beforeEach, afterEach, vi } from 'vitest';
 import moment from 'moment';
-import extractRelativeDate from '../../src/extractRelativeDate';
+import extractRelativeDate from '@/extractRelativeDate';
 
 beforeEach(() => {
   vi.useFakeTimers();

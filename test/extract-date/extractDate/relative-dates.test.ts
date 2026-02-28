@@ -2,7 +2,7 @@ import { it, expect, beforeEach, afterEach, vi } from 'vitest';
 import {
   parse as parseDate,
 } from 'date-fns';
-import extractDate from '../../../src/extractDate';
+import extractDate from '@/extractDate';
 
 beforeEach(() => {
   vi.useFakeTimers();

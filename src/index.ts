@@ -1,3 +1,3 @@
-import extractDate from './extractDate';
+import extractDate from '@/extractDate';
 
 export default extractDate;

@@ -1,5 +1,5 @@
 import { it, expect, beforeEach, afterEach, vi } from 'vitest';
-import extractDate from '../../../src/extractDate';
+import extractDate from '@/extractDate';
 
 beforeEach(() => {
   vi.useFakeTimers();

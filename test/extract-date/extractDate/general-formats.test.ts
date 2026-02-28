@@ -3,9 +3,9 @@ import {
   format as formatDate,
   parse as parseDate,
 } from 'date-fns';
-import extractDate from '../../../src/extractDate';
-import createFormats from '../../../src/createFormats';
-import type { UserConfigurationType, DirectionType } from '../../../src/types';
+import extractDate from '@/extractDate';
+import createFormats from '@/createFormats';
+import type { UserConfigurationType, DirectionType } from '@/types';
 
 // https://en.wikipedia.org/wiki/Date_format_by_country
 // %w arbitrary white-space separated text

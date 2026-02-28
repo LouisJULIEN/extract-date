@@ -1,5 +1,3 @@
-/* eslint-disable no-continue, no-negated-condition */
-
 import {
   format as formatDate,
   parse as parseDate,
@@ -8,17 +6,17 @@ import {
 import { enUS as dateFnsLocale } from 'date-fns/locale';
 import moment from 'moment-timezone';
 import dictionary from 'relative-date-names';
-import createMovingChunks from './createMovingChunks';
-import extractRelativeDate from './extractRelativeDate';
-import createFormats from './createFormats';
-import normalizeInput from './normalizeInput';
-import { replaceMonthName, replaceDayName } from './resolveLocalizedNames';
-import monthsData from './months.json';
+import createMovingChunks from '@/createMovingChunks';
+import extractRelativeDate from '@/extractRelativeDate';
+import createFormats from '@/createFormats';
+import normalizeInput from '@/normalizeInput';
+import { replaceMonthName, replaceDayName } from '@/resolveLocalizedNames';
+import monthsData from '@/months.json';
 import type {
   ConfigurationType,
   DateMatchType,
   UserConfigurationType,
-} from './types';
+} from '@/types';
 
 const defaultConfiguration: ConfigurationType = {
   maximumAge: Infinity,
@@ -56,7 +54,6 @@ const translateChunk = (subject: string, locale: string, translateAccentless: bo
   }).join(' ');
 };
 
-// eslint-disable-next-line complexity
 export default (input: string, userConfiguration: UserConfigurationType = defaultConfiguration): readonly DateMatchType[] => {
   const normalizedInput = normalizeInput(input);
 
