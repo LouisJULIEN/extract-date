@@ -1,6 +1,7 @@
 import { it, expect, beforeEach, afterEach, vi } from 'vitest';
 import moment from 'moment';
 import extractDate from '../../../src/extractDate';
+import type { UserConfigurationType } from '../../../src/types';
 
 beforeEach(() => {
   vi.useFakeTimers();
@@ -16,7 +17,7 @@ it('assumes last year if month difference is greater or equal to `maximumAge`', 
   const configuration = {
     direction: 'MD',
     maximumAge: 10,
-  };
+  } satisfies UserConfigurationType;
 
   expect(extractDate('01-01', configuration)).toEqual([{date: '2000-01-01', originalText: '01-01'}]);
   expect(extractDate('02-01', configuration)).toEqual([{date: '2000-02-01', originalText: '02-01'}]);
@@ -39,7 +40,7 @@ it('does not assume last year when `maximumAge` is `Infinity`', () => {
   const configuration = {
     direction: 'MD',
     maximumAge: Infinity,
-  };
+  } satisfies UserConfigurationType;
 
   expect(extractDate('01-01', configuration)).toEqual([{date: '2000-01-01', originalText: '01-01'}]);
   expect(extractDate('02-01', configuration)).toEqual([{date: '2000-02-01', originalText: '02-01'}]);
@@ -61,7 +62,7 @@ it('increments year value if month difference is greater or equal to `minimumAge
   const configuration = {
     direction: 'MD',
     minimumAge: 2,
-  };
+  } satisfies UserConfigurationType;
 
   expect(extractDate('01-01', configuration)).toEqual([{date: '2001-01-01', originalText: '01-01'}]);
   expect(extractDate('02-01', configuration)).toEqual([{date: '2001-02-01', originalText: '02-01'}]);
@@ -84,7 +85,7 @@ it('does not increment year value if `minimumAge` is `Infinity`', () => {
   const configuration = {
     direction: 'MD',
     minimumAge: Infinity,
-  };
+  } satisfies UserConfigurationType;
 
   expect(extractDate('01-01', configuration)).toEqual([{date: '2000-01-01', originalText: '01-01'}]);
   expect(extractDate('02-01', configuration)).toEqual([{date: '2000-02-01', originalText: '02-01'}]);
@@ -107,7 +108,7 @@ it('`maximumAge` and `minimumAge` can be combined', () => {
     direction: 'MD',
     maximumAge: 2,
     minimumAge: 2,
-  };
+  } satisfies UserConfigurationType;
 
   expect(extractDate('01-01', configuration)).toEqual([{date: '2001-01-01', originalText: '01-01'}]);
   expect(extractDate('02-01', configuration)).toEqual([{date: '2001-02-01', originalText: '02-01'}]);

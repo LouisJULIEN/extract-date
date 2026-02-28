@@ -5,12 +5,13 @@ import {
 } from 'date-fns';
 import extractDate from '../../../src/extractDate';
 import createFormats from '../../../src/createFormats';
+import type { UserConfigurationType, DirectionType } from '../../../src/types';
 
 // https://en.wikipedia.org/wiki/Date_format_by_country
 // %w arbitrary white-space separated text
 
-const describeConfiguration = (userConfiguration) => {
-  const configuration = {};
+const describeConfiguration = (userConfiguration: UserConfigurationType) => {
+  const configuration: { direction?: DirectionType } = {};
 
   if (userConfiguration.direction) {
     configuration.direction = userConfiguration.direction;
@@ -34,7 +35,7 @@ const subjects = formats
     return {
       date: formatDate(currentDate, 'yyyy-MM-dd'),
       dateFnsFormat: format.dateFnsFormat,
-      direction: format.direction,
+      direction: format.direction as DirectionType | undefined,
       input: formatDate(currentDate, format.dateFnsFormat),
     };
   });
@@ -53,7 +54,7 @@ for (const subject of subjects) {
   it('extracts ' + subject.dateFnsFormat + ' from "' + subject.input + '" input using ' + describeConfiguration(subject) + ' configuration', () => {
     vi.setSystemTime(parseDate('2000-06-01', 'yyyy-MM-dd', new Date()).getTime());
 
-    const actual = extractDate(subject.input, subject);
+    const actual = extractDate(subject.input, subject as UserConfigurationType);
     const expected = subject.date;
 
     expect(actual.length).toBe(1);
