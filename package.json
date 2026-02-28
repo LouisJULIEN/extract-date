@@ -11,12 +11,11 @@
   "description": "Extracts date from an arbitrary text input.",
   "devDependencies": {
     "@types/node": "^20.0.0",
-    "esbuild": "^0.24.0",
-    "eslint": "^6.8.0",
-    "eslint-config-canonical": "^18.1.0",
+    "esbuild": "^0.27.3",
+    "eslint": "^10.0.2",
     "husky": "^9.1.7",
-    "typescript": "^5.0.0",
-    "vitest": "^2.0.0"
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.18"
   },
   "engines": {
     "node": ">=20"
