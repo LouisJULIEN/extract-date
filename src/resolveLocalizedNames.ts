@@ -1,31 +1,31 @@
-// @flow
+import monthsData from '@/months.json';
+import daysData from '@/days.json';
 
-import monthsData from './months.json';
-import daysData from './days.json';
+type LocaleData = Record<string, string[]>;
+type LocalesData = Record<string, LocaleData>;
 
 const stripDiacritics = (text: string) => text.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 
-const enMonths = monthsData.en;
-const enDays = daysData.en;
+const enMonths = (monthsData as LocalesData).en;
+const enDays = (daysData as LocalesData).en;
 
 // Cache: locale -> Map<lowercaseName, englishName>
-const monthLookupCache: {[string]: {[string]: string}} = {};
-const dayLookupCache: {[string]: {[string]: string}} = {};
+const monthLookupCache: Record<string, Record<string, string>> = {};
+const dayLookupCache: Record<string, Record<string, string>> = {};
 
-const buildMonthLookup = (locale: string): {[string]: string} => {
+const buildMonthLookup = (locale: string): Record<string, string> => {
   if (monthLookupCache[locale]) {
     return monthLookupCache[locale];
   }
 
-  const localeData = monthsData[locale];
+  const localeData = (monthsData as LocalesData)[locale];
 
   if (!localeData) {
     monthLookupCache[locale] = {};
-
     return monthLookupCache[locale];
   }
 
-  const lookup = {};
+  const lookup: Record<string, string> = {};
 
   for (const monthNum of Object.keys(localeData)) {
     const names = localeData[monthNum];
@@ -33,30 +33,27 @@ const buildMonthLookup = (locale: string): {[string]: string} => {
 
     for (let i = 0; i < names.length; i++) {
       const enName = enNames[i < enNames.length ? i : 0];
-
       lookup[names[i].toLowerCase()] = enName.charAt(0).toUpperCase() + enName.slice(1);
     }
   }
 
   monthLookupCache[locale] = lookup;
-
   return lookup;
 };
 
-const buildDayLookup = (locale: string): {[string]: string} => {
+const buildDayLookup = (locale: string): Record<string, string> => {
   if (dayLookupCache[locale]) {
     return dayLookupCache[locale];
   }
 
-  const localeData = daysData[locale];
+  const localeData = (daysData as LocalesData)[locale];
 
   if (!localeData) {
     dayLookupCache[locale] = {};
-
     return dayLookupCache[locale];
   }
 
-  const lookup = {};
+  const lookup: Record<string, string> = {};
 
   for (const dayNum of Object.keys(localeData)) {
     const names = localeData[dayNum];
@@ -64,13 +61,11 @@ const buildDayLookup = (locale: string): {[string]: string} => {
 
     for (let i = 0; i < names.length; i++) {
       const enName = enNames[i < enNames.length ? i : 0];
-
       lookup[names[i].toLowerCase()] = enName.charAt(0).toUpperCase() + enName.slice(1);
     }
   }
 
   dayLookupCache[locale] = lookup;
-
   return lookup;
 };
 

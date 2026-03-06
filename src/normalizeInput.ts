@@ -1,5 +1,3 @@
-// @flow
-
 export default (input: string): string => {
   let lastInput = input;
 
@@ -22,6 +20,4 @@ export default (input: string): string => {
 
     lastInput = result;
   }
-
-  throw new Error('Unexpected state.');
 };

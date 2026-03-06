@@ -2,4 +2,7 @@ test
 coverage
 .*
 *.log
-!.flowconfig
+.claude
+.idea
+*.config.*
+tsconfig*.json

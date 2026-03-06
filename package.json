@@ -1,18 +1,5 @@
 {
   "author": "Gajus Kuizinas <gajus@gajus.com> (http://gajus.com)",
-  "ava": {
-    "babel": {
-      "compileAsTests": [
-        "test/helpers/**/*"
-      ]
-    },
-    "files": [
-      "test/extract-date/**/*"
-    ],
-    "require": [
-      "@babel/register"
-    ]
-  },
   "dependencies": {
     "@louis.jln/extract-date": "^3.0.1",
     "cartesian": "^1.0.1",
@@ -23,35 +10,16 @@
   },
   "description": "Extracts date from an arbitrary text input.",
   "devDependencies": {
-    "@ava/babel": "^1.0.0",
-    "@babel/cli": "^7.8.4",
-    "@babel/core": "^7.8.4",
-    "@babel/node": "^7.8.4",
-    "@babel/plugin-transform-flow-strip-types": "^7.8.3",
-    "@babel/preset-env": "^7.8.4",
-    "@babel/register": "^7.8.3",
-    "ava": "^3.1.0",
-    "babel-plugin-istanbul": "^6.0.0",
-    "coveralls": "^3.0.9",
-    "esbuild": "^0.24.0",
-    "eslint": "^6.8.0",
-    "eslint-config-canonical": "^18.1.0",
-    "flow-bin": "^0.117.0",
-    "flow-copy-source": "^2.0.9",
-    "gitdown": "^3.1.2",
-    "husky": "^4.2.1",
-    "nyc": "^15.0.0",
-    "semantic-release": "^17.0.2",
-    "sinon": "^8.1.1"
+    "@types/node": "^20.0.0",
+    "esbuild": "^0.27.3",
+    "eslint": "^10.0.2",
+    "husky": "^9.1.7",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.56.1",
+    "vitest": "^4.0.18"
   },
   "engines": {
-    "node": ">6"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run lint && npm run test && npm run build",
-      "pre-push": "gitdown ./.README/README.md --output-file ./README.md --check"
-    }
+    "node": ">=20"
   },
   "keywords": [
     "date",
@@ -62,36 +30,24 @@
   "license": "BSD-3-Clause",
   "main": "./index.js",
   "name": "@louis.jln/extract-date",
-  "nyc": {
-    "include": [
-      "src/**/*.js"
-    ],
-    "instrument": false,
-    "reporter": [
-      "text-lcov"
-    ],
-    "require": [
-      "@babel/register"
-    ],
-    "sourceMap": false
-  },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gajus/extract-date.git"
+    "url": "git+https://github.com/LouisJULIEN/extract-date.git"
   },
   "scripts": {
-    "build": "rm -fr ./dist && NODE_ENV=production babel ./src --out-dir ./dist --copy-files --source-maps && flow-copy-source src dist",
-    "create-readme": "gitdown ./.README/README.md --output-file ./README.md",
-    "lint": "eslint ./src ./test && flow",
-    "test": "NODE_ENV=test ava --verbose --serial",
-    "npm-publish": "rm -rf build; npm run build; cp package.json dist/package.json; cd dist; npm publish --access public"
+    "build": "rm -fr ./dist && tsc --project tsconfig.json",
+    "lint": "eslint ./src ./test",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "npm-publish": "rm -rf build; npm run build; cp package.json dist/package.json; cd dist; npm publish --access public",
+    "prepare": "husky"
   },
-  "version": "3.0.2",
+  "version": "4.0.0",
   "directories": {
     "test": "test"
   },
   "bugs": {
-    "url": "https://github.com/gajus/extract-date/issues"
+    "url": "https://github.com/LouisJULIEN/extract-date/issues"
   },
-  "homepage": "https://github.com/gajus/extract-date#readme"
+  "homepage": "https://github.com/LouisJULIEN/extract-date"
 }

@@ -1,29 +1,21 @@
-// @flow
-
-import test, {
-  afterEach,
-  beforeEach,
-} from 'ava';
-import sinon from 'sinon';
+import { it, expect, beforeEach, afterEach, vi } from 'vitest';
 import {
   addDays,
   format as formatDate,
   parse as parseDate,
 } from 'date-fns';
-import extractDate from '../../../src/extractDate';
-
-let clock;
+import extractDate from '@/extractDate';
 
 beforeEach(() => {
-  clock = sinon.useFakeTimers();
+  vi.useFakeTimers();
 });
 
 afterEach(() => {
-  clock.restore();
+  vi.useRealTimers();
 });
 
-test('extracts multiple dates', (t) => {
-  clock.tick(parseDate('2000-06-01', 'yyyy-MM-dd', new Date()).valueOf());
+it('extracts multiple dates', () => {
+  vi.setSystemTime(parseDate('2000-06-01', 'yyyy-MM-dd', new Date()).valueOf());
 
   const actual = extractDate(formatDate(new Date(), 'yyyy-MM-dd') + ' ' + formatDate(addDays(new Date(), 1), 'yyyy-MM-dd'));
   const expected = [
@@ -37,5 +29,5 @@ test('extracts multiple dates', (t) => {
     },
   ];
 
-  t.deepEqual(actual, expected);
+  expect(actual).toEqual(expected);
 });
