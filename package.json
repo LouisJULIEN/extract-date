@@ -1,7 +1,6 @@
 {
   "author": "Gajus Kuizinas <gajus@gajus.com> (http://gajus.com)",
   "dependencies": {
-    "@louis.jln/extract-date": "^4.0.0",
     "cartesian": "^1.0.1",
     "date-fns": "^2.9.0",
     "moment": "^2.24.0",
@@ -35,14 +34,14 @@
     "url": "git+https://github.com/LouisJULIEN/extract-date.git"
   },
   "scripts": {
-    "build": "rm -fr ./dist && tsc --project tsconfig.json",
+    "build": "rm -fr ./dist && tsc --project tsconfig.build.json",
     "lint": "eslint ./src ./test",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
     "npm-publish": "rm -rf build; npm run build; cp package.json dist/package.json; cd dist; npm publish --access public",
     "prepare": "husky"
   },
-  "version": "4.0.2",
+  "version": "4.0.3",
   "directories": {
     "test": "test"
   },
