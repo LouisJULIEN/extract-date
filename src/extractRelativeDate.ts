@@ -1,16 +1,14 @@
-// @flow
-
 import moment from 'moment-timezone';
 import dictionary from 'relative-date-names';
 
-export default (subject: string, locale: string, timezone: string): ?string => {
-  const translation = dictionary[locale];
+export default (subject: string, locale: string, timezone: string): string | null => {
+  const translation = (dictionary as Record<string, { day: { relative: { yesterday: string; today: string; tomorrow: string } } }>)[locale];
 
   if (!translation) {
     throw new Error('No translation available for the target locale.');
   }
 
-  if (!moment.tz.zone(timezone)) {
+  if (timezone && !moment.tz.zone(timezone)) {
     throw new Error('Unrecognized timezone.');
   }
 

@@ -1,5 +1,3 @@
-// @flow
-
 export default (input: string): string => {
   let lastInput = input;
 
@@ -13,7 +11,8 @@ export default (input: string): string => {
 
       .replace(/[.:;] /g, ' ')
       .trim()
-      .replace(/[.!#?]+$/g, '');
+      .replace(/[.!#?]+$/g, '')
+      .replace(/ {2,}/g, ' ');
 
     if (result === lastInput) {
       return result;
@@ -21,6 +20,4 @@ export default (input: string): string => {
 
     lastInput = result;
   }
-
-  throw new Error('Unexpected state.');
 };

@@ -1,38 +1,60 @@
-// @flow
-
-/* eslint-disable no-continue, no-negated-condition, import/no-namespace */
-
 import {
   format as formatDate,
   parse as parseDate,
   isValid as isValidDate,
 } from 'date-fns';
-import * as locales from 'date-fns/locale';
+import { enUS as dateFnsLocale } from 'date-fns/locale';
 import moment from 'moment-timezone';
 import dictionary from 'relative-date-names';
-import createMovingChunks from './createMovingChunks';
-import extractRelativeDate from './extractRelativeDate';
-import createFormats from './createFormats';
-import normalizeInput from './normalizeInput';
+import createMovingChunks from '@/createMovingChunks';
+import extractRelativeDate from '@/extractRelativeDate';
+import createFormats from '@/createFormats';
+import normalizeInput from '@/normalizeInput';
+import { replaceMonthName, replaceDayName } from '@/resolveLocalizedNames';
+import monthsData from '@/months.json';
 import type {
   ConfigurationType,
   DateMatchType,
   UserConfigurationType,
-} from './types';
+} from '@/types';
 
-const defaultConfiguration = {
+const defaultConfiguration: ConfigurationType = {
   maximumAge: Infinity,
   minimumAge: Infinity,
 };
 
+const stripDiacritics = (text: string) => text.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
 const formats = createFormats();
 
-const dateFnsLocaleMap = {
-  en: 'enUS',
+const translateChunk = (subject: string, locale: string, translateAccentless: boolean): string => {
+  if (locale === 'en') {
+    return subject;
+  }
+
+  return subject.split(' ').map((word) => {
+    // Preserve trailing punctuation (e.g. commas)
+    const punctuationMatch = word.match(/^(.+?)([,]+)$/);
+    const cleanWord = punctuationMatch ? punctuationMatch[1] : word;
+    const punctuation = punctuationMatch ? punctuationMatch[2] : '';
+
+    const monthReplacement = replaceMonthName(cleanWord, locale, translateAccentless);
+
+    if (monthReplacement) {
+      return monthReplacement + punctuation;
+    }
+
+    const dayReplacement = replaceDayName(cleanWord, locale, translateAccentless);
+
+    if (dayReplacement) {
+      return dayReplacement + punctuation;
+    }
+
+    return word;
+  }).join(' ');
 };
 
-// eslint-disable-next-line complexity
-export default (input: string, userConfiguration: UserConfigurationType = defaultConfiguration): $ReadOnlyArray<DateMatchType> => {
+export default (input: string, userConfiguration: UserConfigurationType = defaultConfiguration): readonly DateMatchType[] => {
   const normalizedInput = normalizeInput(input);
 
   const configuration: ConfigurationType = {
@@ -41,16 +63,13 @@ export default (input: string, userConfiguration: UserConfigurationType = defaul
   };
 
   const locale = configuration.locale || 'en';
+  const translateAccentless = Boolean(configuration.translateAccentless);
 
-  const dateFnsLocale = locales[dateFnsLocaleMap[locale] || locale];
-
-  if (!dateFnsLocale) {
-    throw new Error('No translation available for the target locale (date-fns).');
+  if (!(monthsData as Record<string, unknown>)[locale]) {
+    throw new Error('No translation available for the target locale.');
   }
 
-  if (!dictionary[locale]) {
-    throw new Error('No translation available for the target locale (relative dates).');
-  }
+  const hasRelativeDateSupport = Boolean((dictionary as Record<string, unknown>)[locale]);
 
   if (configuration.timezone && !moment.tz.zone(configuration.timezone)) {
     throw new Error('Unrecognized timezone.');
@@ -66,7 +85,7 @@ export default (input: string, userConfiguration: UserConfigurationType = defaul
 
   let words = normalizedInput.split(' ');
 
-  const matches = [];
+  const matches: DateMatchType[] = [];
 
   const baseDate = parseDate('12:00', 'HH:mm', new Date());
 
@@ -82,27 +101,27 @@ export default (input: string, userConfiguration: UserConfigurationType = defaul
 
       if (format.dateFnsFormat === 'R') {
         if (!configuration.locale) {
-        } else if (!configuration.timezone) {
+        } else if (!hasRelativeDateSupport) {
         } else {
-          const maybeDate = extractRelativeDate(subject, configuration.locale, configuration.timezone);
+          const maybeDate = extractRelativeDate(subject, configuration.locale, configuration.timezone ?? '');
 
           if (maybeDate) {
             words = words.slice(wordOffset);
 
             matches.push({
               date: maybeDate,
-              originalText: subject,
-            });
+              originalText: stripDiacritics(subject),
+            } as DateMatchType & { originalText: string });
           }
         }
       } else if (format.dateFnsFormat === 'EEE' || format.dateFnsFormat === 'EEEE') {
+        const translatedSubject = translateChunk(subject, locale, translateAccentless);
+
         const date = parseDate(
-          subject,
+          translatedSubject,
           format.dateFnsFormat,
           baseDate,
-          {
-            locale: dateFnsLocale,
-          },
+          { locale: dateFnsLocale },
         );
 
         if (isValidDate(date)) {
@@ -110,20 +129,20 @@ export default (input: string, userConfiguration: UserConfigurationType = defaul
 
           matches.push({
             date: formatDate(date, 'yyyy-MM-dd'),
-            originalText: subject,
-          });
+            originalText: stripDiacritics(subject),
+          } as DateMatchType & { originalText: string });
         }
       } else {
         const yearIsExplicit = typeof format.yearIsExplicit === 'boolean' ? format.yearIsExplicit : true;
 
+        const translatedSubject = format.localised ? translateChunk(subject, locale, translateAccentless) : subject;
+
         if (yearIsExplicit) {
           const date = parseDate(
-            subject,
+            translatedSubject,
             format.dateFnsFormat,
             baseDate,
-            {
-              locale: dateFnsLocale,
-            },
+            { locale: dateFnsLocale },
           );
 
           if (!isValidDate(date)) {
@@ -146,16 +165,14 @@ export default (input: string, userConfiguration: UserConfigurationType = defaul
 
           matches.push({
             date: formatDate(date, 'yyyy-MM-dd'),
-            originalText: subject,
-          });
+            originalText: stripDiacritics(subject),
+          } as DateMatchType & { originalText: string });
         } else {
           const date = parseDate(
-            subject,
+            translatedSubject,
             format.dateFnsFormat,
             baseDate,
-            {
-              locale: dateFnsLocale,
-            },
+            { locale: dateFnsLocale },
           );
 
           if (!isValidDate(date)) {
@@ -168,7 +185,7 @@ export default (input: string, userConfiguration: UserConfigurationType = defaul
           const parsedMonth = parseInt(formatDate(date, 'M'), 10) + parseInt(formatDate(date, 'yyyy'), 10) * 12;
           const difference = parsedMonth - currentMonth;
 
-          let useYear;
+          let useYear: number;
 
           if (difference >= configuration.maximumAge) {
             useYear = currentYear - 1;
@@ -182,9 +199,7 @@ export default (input: string, userConfiguration: UserConfigurationType = defaul
             useYear + '-' + formatDate(date, 'MM-dd'),
             'yyyy-MM-dd',
             baseDate,
-            {
-              locale: dateFnsLocale,
-            },
+            { locale: dateFnsLocale },
           );
 
           if (!isValidDate(maybeDate)) {
@@ -203,8 +218,8 @@ export default (input: string, userConfiguration: UserConfigurationType = defaul
 
           matches.push({
             date: formatDate(maybeDate, 'yyyy-MM-dd'),
-            originalText: subject,
-          });
+            originalText: stripDiacritics(subject),
+          } as DateMatchType & { originalText: string });
         }
       }
     }

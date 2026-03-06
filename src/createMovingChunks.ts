@@ -1,7 +1,5 @@
-// @flow
-
-export default (haystack: $ReadOnlyArray<string>, sliceLength: number): $ReadOnlyArray<$ReadOnlyArray<string>> => {
-  const slices = [];
+export default (haystack: readonly string[], sliceLength: number): readonly (readonly string[])[] => {
+  const slices: (readonly string[])[] = [];
 
   let index = 0;
 
